@@ -1,0 +1,692 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Matioli | Pizzas Italianas</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #f5f0e5;
+      color: #353b28;
+      font-family: Georgia, serif;
+    }
+
+    
+header {
+  background: #39432e;
+  color: #f5f0e5;
+  text-align: center;
+  padding: 35px 15px;
+  border-bottom: 5px solid #b69a60;
+}
+
+.logo-contenedor {
+  margin-bottom: 15px;
+}
+
+.logo {
+  max-width: 220px;
+max-height: 150px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+
+.pizza-img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 10px;
+  display: block;
+  margin-bottom: 12px;
+}
+
+    header h1 {
+      margin: 0;
+      font-size: 42px;
+letter-spacing: 5px;
+    }
+
+    header p {
+
+      margin-bottom: 0;
+     font-size: 18px;
+letter-spacing: 3px;
+    }
+header p:last-of-type {
+  margin-top: 12px;
+  font-size: 16px;
+  letter-spacing: 1.5px;
+  font-style: italic;
+  color: #e8dcc2;
+}
+    main {
+      max-width: 1000px;
+      margin: 35px auto;
+      padding: 0 20px;
+    }
+
+    h2 {
+      text-align: center;
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .intro {
+      text-align: center;
+      margin-bottom: 35px;
+    }
+
+    .pizzas {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    
+.pizza {
+  background: #fffdf8;
+  border: 1px solid #c6b58d;
+  border-radius: 12px;
+  padding: 18px;
+  box-shadow: 0 3px 10px #00000010;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  box-sizing: border-box;
+  transition: transform 0.2s ease;
+}
+
+.pizza:hover {
+  transform: translateY(-4px);
+}
+
+
+    .pizza h3 {
+      color: #39432e;
+      margin-top: 0;
+      font-size: 21px;
+    }
+
+    .pizza p {
+      min-height: 45px;
+      line-height: 1.5;
+      color: #625e52;
+    }
+
+    
+.precio {
+  border-top: 1px solid #ded4bd;
+  padding-top: 12px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  color: #39432e;
+}
+
+.precio strong {
+  display: block;
+  margin: 9px 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+
+    
+.whatsapp {
+  display: block;
+  background: #39432e;
+  color: #ffffff;
+  text-align: center;
+  text-decoration: none;
+  padding: 13px;
+  border-radius: 8px;
+  margin-top: auto;
+  font-weight: bold;
+  font-size: 15px;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.whatsapp:hover {
+  background: #596747;
+  transform: scale(1.02);
+}
+.promociones {
+  text-align: center;
+  background: #fffdf8;
+  border: 1px solid #c6b58d;
+  border-radius: 12px;
+  padding: 25px 15px;
+  margin: 30px auto;
+  max-width: 900px;
+}
+
+.promociones h2 {
+  color: #39432e;
+  margin-bottom: 10px;
+}
+
+.promociones p {
+  color: #596747;
+  font-size: 16px;
+}
+.lista-promociones {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin-top: 25px;
+}
+
+.tarjeta-promocion {
+  background: #ffffff;
+  border: 1px solid #c6b58d;
+  border-radius: 12px;
+  padding: 18px;
+  text-align: center;
+  box-shadow: 0 3px 10px #00000010;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.foto-promocion {
+  width: 100%;
+  height: 180px;
+  object-fit: contain;
+  display: block;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  background: #eee8da;
+  box-sizing: border-box;
+}
+}
+
+.tarjeta-promocion h3 {
+  color: #39432e;
+}
+
+.precio-anterior {
+  text-decoration: line-through;
+  color: #888888;
+}
+
+.precio-promocional {
+  color: #39432e;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.descuento {
+  color: #a17d38;
+  font-weight: bold;
+}
+.contacto {
+  text-align: center;
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 25px;
+  background: #fffdf8;
+  border: 1px solid #c6b58d;
+  border-radius: 12px;
+}
+
+.contacto h2 {
+  color: #39432e;
+  margin-bottom: 20px;
+}
+
+.contacto p {
+  text-align: center;
+  color: #39432e;
+  margin: 10px 0;
+}
+
+.pedidosya {
+  display: block;
+  background: #b69a60;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  padding: 13px;
+  border-radius: 8px;
+  margin-top: 12px;
+  font-weight: bold;
+}
+
+.instagram {
+  display: block;
+  background: #39432e;
+  color: #ffffff;
+  text-align: center;
+  text-decoration: none;
+  padding: 13px;
+  border-radius: 8px;
+  margin-top: 12px;
+  font-weight: bold;
+  transition: background 0.2s ease;
+}
+
+.instagram:hover {
+  background: #596747;
+}
+
+    footer {
+      background: #39432e;
+      color: #f5f0e5;
+      text-align: center;
+      padding: 22px;
+      margin-top: 45px;
+    }
+
+@media (max-width: 600px) {
+  main {
+    margin: 20px auto;
+    padding: 0 12px;
+  }
+
+  header {
+    padding: 22px 10px;
+  }
+
+  header h1 {
+    font-size: 30px;
+    letter-spacing: 3px;
+  }
+
+  header p {
+    font-size: 14px;
+  }
+
+  h2 {
+    font-size: 24px;
+  }
+
+  .pizzas {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .pizza {
+    padding: 15px;
+  }
+
+  .pizza-img {
+    height: 210px;
+  }
+    .lista-promociones {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .tarjeta-promocion {
+    padding: 15px;
+  }
+
+  .foto-promocion {
+    height: 200px;
+  }
+}
+
+  </style>
+</head>
+
+<body>
+
+  
+<header>
+  <div class="logo-contenedor">
+  <img src="logo/logo.jpg" alt="Logo Matioli" class="logo">
+</div>
+
+  <h1>MATIOLI</h1>
+  <p>PIZZAS ITALIANAS</p>
+  <p>«El auténtico sabor italiano»</p>
+</header>
+
+
+  <main>
+   <section class="promociones">
+  <h2>Promociones y novedades</h2>
+  <p>Descubrí nuestras propuestas especiales.</p>
+
+  <div class="lista-promociones">
+
+    <div class="tarjeta-promocion" data-original="20000" data-promo="16000" data-vencimiento="2026-11-30" data-activa="true">
+
+  <img src="imagenes/muzzarella.jpg"
+       alt="Pizza de muzzarella"
+       class="foto-promocion">
+
+  <h3>Título de la promoción</h3>
+  <p>Descripción de la oferta especial.</p>
+
+  <p class="precio-anterior"></p>
+<p class="precio-promocional"></p>
+  <p class="descuento">
+  Ahorrás un 20 %
+</p>
+
+  <a class="whatsapp" href="https://wa.me/5493764194291">
+    Pedir por WhatsApp
+  </a>
+
+</div>
+<div class="tarjeta-promocion" data-original="20000" data-promo="16000" data-vencimiento="2026-11-30" data-activa="true">
+
+  <img src="imagenes/napolitana.jpeg"
+       alt="Pizza de muzzarella"
+       class="foto-promocion">
+
+  <h3>Título de la promoción</h3>
+  <p>Descripción de la oferta especial.</p>
+
+  <p class="precio-anterior"></p>
+<p class="precio-promocional"></p>
+  <p class="descuento">
+  Ahorrás un 20 %
+</p>
+
+  <a class="whatsapp" href="https://wa.me/5493764194291">
+    Pedir por WhatsApp
+  </a>
+
+</div>
+
+  </div>
+</section>
+    <h2>Nuestras pizzas</h2>
+    <p class="intro">Hechas para disfrutar</p>
+
+    <div class="pizzas">
+
+      
+<div class="pizza">
+  <img src="imagenes/muzzarella.jpg" alt="Pizza de muzzarella" class="pizza-img">
+
+  <h3>Muzzarella</h3>
+  <p>Muzzarella, orégano y aceitunas.</p>
+  <div class="precio">
+    <strong>WhatsApp: $15.000</strong>
+    <strong>PedidosYa: $18.000</strong>
+  </div>
+  <a class="whatsapp" href="https://wa.me/5493764194291">Pedir por WhatsApp</a>
+</div>
+
+
+      <div class="pizza">
+
+<img src="imagenes/calabresa.jpg" alt="Pizza Calabresa de Matioli" class="pizza-img">
+
+        <h3>Calabresa</h3>
+        <p>Muzzarella, calabresa y aceitunas.</p>
+        <div class="precio">
+          <strong>WhatsApp: $15.500</strong>
+          <strong>PedidosYa: $18.400</strong>
+        </div>
+        <a class="whatsapp" href="https://wa.me/5493764194291">Pedir por WhatsApp</a>
+      </div>
+
+      <div class="pizza">
+
+<img src="imagenes/jamon-morrones.jpg" alt="Pizza de jamón y morrones de Matioli" class="pizza-img">
+
+        <h3>Jamón y morrones</h3>
+        <p>Muzzarella, jamón cocido y morrones asados.</p>
+        <div class="precio">
+          <strong>WhatsApp: $15.500</strong>
+          <strong>PedidosYa: $18.400</strong>
+        </div>
+        <a class="whatsapp" href="https://wa.me/5493764194291">Pedir por WhatsApp</a>
+      </div>
+
+      <div class="pizza">
+        <img src="imagenes/napolitana.jpeg" alt="Pizza Napolitana con jamón de Matioli" class="pizza-img">
+        <h3>Napolitana con jamón</h3>
+        <p>Muzzarella, jamón cocido, tomate, aceitunas y orégano.</p>
+        <div class="precio">
+          <strong>WhatsApp: $19.000</strong>
+          <strong>PedidosYa: $22.800</strong>
+        </div>
+        <a class="whatsapp" href="https://wa.me/5493764194291">Pedir por WhatsApp</a>
+      </div>
+
+      
+<div class="pizza">
+  <img src="imagenes/panceta-verdeo.jpg" alt="Pizza de panceta y verdeo" class="pizza-img">
+
+  <h3>Panceta y verdeo</h3>
+  <p>Muzzarella, panceta y verdeo.</p>
+  <div class="precio">
+    <strong>WhatsApp: $19.000</strong>
+    <strong>PedidosYa: $22.800</strong>
+  </div>
+  <a class="whatsapp" href="https://wa.me/5493764194291">Pedir por WhatsApp</a>
+</div>
+
+
+      
+<div class="pizza">
+  <img src="imagenes/cuatro-quesos.jpg" alt="Pizza cuatro quesos de Matioli" class="pizza-img">
+
+  <h3>Cuatro quesos</h3>
+  <p>Muzzarella, parmesano, reggianito y queso azul.</p>
+  <div class="precio">
+    <strong>WhatsApp: $18.500</strong>
+    <strong>PedidosYa: $22.000</strong>
+  </div>
+  <a class="whatsapp" href="https://wa.me/5493764194291">Pedir por WhatsApp</a>
+</div>
+
+
+    
+<div class="pizza">
+  <img src="imagenes/azul-nueces.jpg" alt="Pizza de queso azul y nueces de Matioli" class="pizza-img">
+
+  <h3>Queso azul y nueces</h3>
+  <p>Queso azul, tomates y nueces.</p>
+  <div class="precio">
+    <strong>WhatsApp: $19.500</strong>
+    <strong>PedidosYa: $23.500</strong>
+  </div>
+  <a class="whatsapp" href="https://wa.me/5493764194291">Pedir por WhatsApp</a>
+</div>
+
+      <div class="pizza">
+  <img src="imagenes/margarita.jpg" alt="Pizza de margarita" class="pizza-img">
+
+  <h3>margarita</h3>
+  <p>Muzzarella, salsa, albahaca fresca .</p>
+  <div class="precio">
+    <strong>WhatsApp: $15.000</strong>
+    <strong>PedidosYa: $18.000</strong>
+  </div>
+  <a class="whatsapp" href="https://wa.me/5493764194291">Pedir por WhatsApp</a>
+</div>
+
+    </div>
+
+<h2>Pizzas individuales</h2>
+<p class="intro">Todo el sabor de Matioli en tamaño individual</p>
+
+<div class="pizzas">
+
+  
+<div class="pizza">
+  <img src="imagenes/3-quesos.jpg" alt="Pizza individual de tres quesos de Matioli" class="pizza-img">
+
+  <h3>3 quesos</h3>
+  <p>Una combinación de tres quesos.</p>
+  <div class="precio">
+    <strong>WhatsApp: $12.000</strong>
+    <strong>PedidosYa: $14.500</strong>
+  </div>
+  <a class="whatsapp" href="https://wa.me/5493764194291">Pedir por WhatsApp</a>
+</div>
+
+
+  
+<div class="pizza">
+  <img src="imagenes/muzzarella-individual.jpg" alt="Pizza individual de muzzarella de Matioli" class="pizza-img">
+
+  <h3>Muzzarella</h3>
+  <p>Muzzarella y salsa de tomate.</p>
+  <div class="precio">
+    <strong>WhatsApp: $7.500</strong>
+    <strong>PedidosYa: $9.100</strong>
+  </div>
+  <a class="whatsapp" href="https://wa.me/5493764194291">Pedir por WhatsApp</a>
+</div>
+
+
+  
+<div class="pizza">
+  <img src="imagenes/calabresa-individual.jpg" alt="Pizza individual de calabresa de Matioli" class="pizza-img">
+
+  <h3>Calabresa</h3>
+  <p>Muzzarella y calabresa.</p>
+  <div class="precio">
+    <strong>WhatsApp: $11.000</strong>
+    <strong>PedidosYa: $13.000</strong>
+  </div>
+  <a class="whatsapp" href="https://wa.me/5493764194291">Pedir por WhatsApp</a>
+</div>
+
+
+  
+<div class="pizza">
+  <img src="imagenes/salsa-pesto.jpg" alt="Pizza individual con salsa pesto de Matioli" class="pizza-img">
+
+  <h3>Salsa pesto</h3>
+  <p>Pizza individual con salsa pesto.</p>
+  <div class="precio">
+    <strong>WhatsApp: $9.000</strong>
+    <strong>PedidosYa: $11.000</strong>
+  </div>
+  <a class="whatsapp" href="https://wa.me/5493764194291">Pedir por WhatsApp</a>
+</div>
+
+
+  
+<div class="pizza">
+  <img src="imagenes/ajo-tomate.jpg" alt="Pizza individual de ajo y tomate de Matioli" class="pizza-img">
+
+  <h3>Ajo y tomate</h3>
+  <p>Una combinación de ajo y tomate.</p>
+  <div class="precio">
+    <strong>WhatsApp: $9.000</strong>
+    <strong>PedidosYa: $11.000</strong>
+  </div>
+  <a class="whatsapp" href="https://wa.me/5493764194291">Pedir por WhatsApp</a>
+</div>
+
+
+ 
+<div class="pizza">
+  <img src="imagenes/margarita.jpg" alt="Pizza individual Margarita de Matioli" class="pizza-img">
+
+  <h3>Margarita</h3>
+  <p>Pizza individual estilo Margarita.</p>
+  <div class="precio">
+    <strong>WhatsApp: $9.000</strong>
+    <strong>PedidosYa: $10.500</strong>
+  </div>
+  <a class="whatsapp" href="https://wa.me/5493764194291">Pedir por WhatsApp</a>
+</div>
+
+
+</div>
+
+  </main>
+
+<section class="contacto">
+  <h2>¡Hacé tu pedido!</h2>
+
+  <p>Delivery todos los días</p>
+  <p>Horario: 18:30 a 23:59 hs</p>
+
+  <a class="whatsapp" href="https://wa.me/5493764194291">
+    Pedir por WhatsApp
+  </a>
+
+  <a class="pedidosya" href="https://www.pedidosya.com.ar/restaurantes/posadas/matioli-pizzas-adf35685-d86c-46f3-b7be-5305b69f8c83-menu" target="_blank">
+    Pedir por PedidosYa
+  </a>
+  <a class="instagram" href="https://www.instagram.com/pizzasitalianas.matioliv/" target="_blank">
+  Seguinos en Instagram
+</a>
+<div class="datos-entrega">
+  <h3>¿Dónde estamos?</h3>
+
+  <p>Florencio Sánchez 1559, Posadas, Misiones.</p>
+
+  <a href="https://www.google.com/maps/search/?api=1&query=Florencio+Sanchez+1559%2C+Posadas%2C+Misiones%2C+Argentina"
+     target="_blank">
+    Ver ubicación en Google Maps
+  </a>
+
+  <h3>Información sobre las entregas</h3>
+
+  <p>Realizamos envíos a toda la ciudad de Posadas.</p>
+
+  <p>PedidosYa cuenta con sus propios motomandados.</p>
+
+  <p>Para pedidos por WhatsApp, el cliente coordina su propio motomandado para retirar el pedido.</p>
+</div>
+</section>
+
+
+  <footer>
+    Matioli Pizzas Italianas · Posadas, Misiones
+  </footer>
+<script>
+document.querySelectorAll(".tarjeta-promocion").forEach(function(tarjeta) {
+  const original = Number(tarjeta.dataset.original);
+  const promo = Number(tarjeta.dataset.promo);
+  const vencimiento = tarjeta.dataset.vencimiento;
+  const activa = tarjeta.dataset.activa !== "false";
+
+  if (!activa) {
+    tarjeta.style.display = "none";
+    return;
+  }
+
+  if (vencimiento) {
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+
+    const fechaFin = new Date(vencimiento + "T00:00:00");
+
+    if (hoy > fechaFin) {
+      tarjeta.style.display = "none";
+      return;
+    }
+  }
+
+  if (original > 0 && promo >= 0 && promo < original) {
+    const formato = new Intl.NumberFormat("es-AR");
+
+    tarjeta.querySelector(".precio-anterior").textContent =
+      "Precio habitual: $ " + formato.format(original);
+
+    tarjeta.querySelector(".precio-promocional").textContent =
+      "Precio promocional: $ " + formato.format(promo);
+
+    const descuento = Math.round((original - promo) / original * 100);
+
+    const texto = tarjeta.querySelector(".descuento");
+    if (texto) {
+      texto.textContent = "Ahorrás un " + descuento + " %";
+    }
+  }
+});
+</script>
+</body>
+</html>
