@@ -40,15 +40,6 @@ max-height: 150px;
 }
 
 
-.pizza-img {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  border-radius: 10px;
-  display: block;
-  margin-bottom: 12px;
-}
-
     header h1 {
       margin: 0;
       font-size: 42px;
@@ -100,7 +91,7 @@ header p:last-of-type {
   box-shadow: 0 3px 10px #00000010;
   display: flex;
   flex-direction: column;
-  height: 100%;
+  height: auto;
   box-sizing: border-box;
   transition: transform 0.2s ease;
 }
@@ -117,7 +108,7 @@ header p:last-of-type {
     }
 
     .pizza p {
-      min-height: 45px;
+      min-height: 0;
       line-height: 1.5;
       color: #625e52;
     }
@@ -193,7 +184,7 @@ header p:last-of-type {
   box-shadow: 0 3px 10px #00000010;
   display: flex;
   flex-direction: column;
-  height: 100%;
+  height: auto;
   box-sizing: border-box;
 }
 
@@ -217,6 +208,7 @@ header p:last-of-type {
   text-decoration: line-through;
   color: #888888;
 }
+
 
 .precio-promocional {
   color: #39432e;
@@ -273,7 +265,13 @@ header p:last-of-type {
   font-weight: bold;
   transition: background 0.2s ease;
 }
-
+.pizza-img {
+  width: 100%;
+  height: 210px;
+  object-fit: cover;
+  display: block;
+  border-radius: 8px;
+}
 .instagram:hover {
   background: #596747;
 }
@@ -334,6 +332,150 @@ header p:last-of-type {
     height: 200px;
   }
 }
+.historia-matioli {
+  max-width: 950px;
+  margin: 35px auto;
+  padding: 35px 25px;
+  background-color: #f5f0e5;
+  color: #4a3928;
+  border-radius: 12px;
+  text-align: center;
+  line-height: 1.8;
+}
+
+.historia-matioli h2 {
+  color: #65713b;
+  font-family: Georgia, serif;
+  font-size: 30px;
+  margin-bottom: 20px;
+}
+
+.historia-matioli p {
+  font-size: 17px;
+  margin: 12px auto;
+  max-width: 800px;
+}
+.galeria-matioli {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  max-width: 1100px;
+  margin: 35px auto 10px;
+}
+
+.foto-historia {
+  background: #fffdf7;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.10);
+  text-align: center;
+  padding-bottom: 15px;
+}
+
+.foto-historia img {
+  width: 100%;
+  height: 210px;
+  object-fit: cover;
+  display: block;
+}
+
+.foto-historia h3 {
+  color: #65713b;
+  font-family: Georgia, serif;
+  margin: 14px 8px 5px;
+}
+
+.foto-historia p {
+  font-size: 14px;
+  margin: 5px 10px;
+}
+
+@media (max-width: 700px) {
+  .galeria-matioli {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .foto-historia img {
+    height: 160px;
+  }
+}
+
+@media (max-width: 420px) {
+  .galeria-matioli {
+    grid-template-columns: 1fr;
+  }
+}
+  
+/* Banners principales administrados desde Supabase */
+.banner-principal {
+  position: relative;
+  width: min(1100px, calc(100% - 32px));
+  margin: 28px auto 10px;
+  overflow: hidden;
+  border: 1px solid #c6b58d;
+  border-radius: 14px;
+  background: #eee8da;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.10);
+}
+.banner-principal[hidden],
+.banner-controles[hidden],
+.banner-puntos[hidden] { display: none; }
+.banner-marco {
+  position: relative;
+  width: 100%;
+  height: clamp(190px, 32vw, 390px);
+}
+.banner-marco img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.banner-controles {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+  pointer-events: none;
+}
+.banner-flecha {
+  pointer-events: auto;
+  width: 42px;
+  height: 42px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(57,67,46,0.82);
+  color: #fffdf8;
+  font-size: 25px;
+  cursor: pointer;
+}
+.banner-puntos {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 12px;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+.banner-punto {
+  width: 10px;
+  height: 10px;
+  padding: 0;
+  border: 1px solid white;
+  border-radius: 50%;
+  background: rgba(57,67,46,0.55);
+  cursor: pointer;
+}
+.banner-punto.activo { background: #fffdf8; }
+@media (max-width: 600px) {
+  .banner-principal { width: calc(100% - 24px); margin-top: 18px; }
+  .banner-marco { height: 190px; }
+  .banner-flecha { width: 34px; height: 34px; font-size: 20px; }
+}
 
   </style>
 </head>
@@ -351,55 +493,80 @@ header p:last-of-type {
   <p>«El auténtico sabor italiano»</p>
 </header>
 
+<section id="bannerPrincipal" class="banner-principal" aria-label="Banners principales" hidden>
+  <div class="banner-marco" id="bannerMarco"></div>
+  <div class="banner-controles" id="bannerControles" hidden>
+    <button type="button" class="banner-flecha" id="bannerAnterior" aria-label="Banner anterior">‹</button>
+    <button type="button" class="banner-flecha" id="bannerSiguiente" aria-label="Banner siguiente">›</button>
+  </div>
+  <div class="banner-puntos" id="bannerPuntos"></div>
+</section>
 
   <main>
+    <section class="historia-matioli">
+
+  <h2>Nuestra pasión por la pizza italiana</h2>
+
+  <p>
+    Creemos que una buena pizza comienza mucho antes de llegar al horno.
+    Nace de la dedicación, de la elección de buenos ingredientes y del
+    respeto por las recetas y las tradiciones que nos dejaron nuestros
+    abuelos italianos.
+  </p>
+
+  <p>
+    Trabajamos con pasión, cuidando cada preparación y recuperando
+    el espíritu de las antiguas pizzerías italianas:
+    ingredientes nobles, elaboración artesanal y el placer
+    de compartir algo hecho con cariño.
+  </p>
+
+  <div class="galeria-matioli">
+
+    <div class="foto-historia">
+      <img src="imagenes/pizza-bollos.jpg" alt="Bollos de masa para pizza">
+      <h3>La masa</h3>
+      <p>El comienzo de cada buena pizza.</p>
+    </div>
+
+    <div class="foto-historia">
+      <img src="imagenes/pizza-ingredientes.jpeg" alt="Ingredientes para nuestras pizzas">
+      <h3>Los ingredientes</h3>
+      <p>La elección de cada detalle.</p>
+    </div>
+
+    <div class="foto-historia">
+      <img src="imagenes/pizza-preparacion.jpg" alt="Preparación artesanal de pizza">
+      <h3>La elaboración</h3>
+      <p>Trabajo, dedicación y cuidado.</p>
+    </div>
+
+    <div class="foto-historia">
+      <img src="imagenes/Mattioli.jpg" alt="Matioli Pizzas">
+      <h3>El horno</h3>
+      <p>Donde cada pizza toma su carácter.</p>
+    </div>
+
+    <div class="foto-historia">
+      <img src="imagenes/pizza-horno.jpg" alt="Fuego encendido del horno">
+      <h3>El fuego</h3>
+      <p>El calor que acompaña nuestra tradición.</p>
+    </div>
+    <div class="foto-historia">
+  <img src="imagenes/pizza-recienhecha.jpg" alt="Pizza Matioli recién hecha">
+  <h3>El resultado final</h3>
+  <p>Una pizza hecha con pasión y tradición.</p>
+</div>
+
+  </div>
+
+</section>
    <section class="promociones">
   <h2>Promociones y novedades</h2>
   <p>Descubrí nuestras propuestas especiales.</p>
 
   <div class="lista-promociones">
-
-    <div class="tarjeta-promocion" data-original="20000" data-promo="16000" data-vencimiento="2026-11-30" data-activa="true">
-
-  <img src="imagenes/muzzarella.jpg"
-       alt="Pizza de muzzarella"
-       class="foto-promocion">
-
-  <h3>Título de la promoción</h3>
-  <p>Descripción de la oferta especial.</p>
-
-  <p class="precio-anterior"></p>
-<p class="precio-promocional"></p>
-  <p class="descuento">
-  Ahorrás un 20 %
-</p>
-
- <a class="whatsapp" href="https://wa.me/5493764194291?text=Hola,%20quiero%20pedir%20una%20pizza%20Muzzarella">
-  Pedir por WhatsApp
-</a>
-
-</div>
-<div class="tarjeta-promocion" data-original="20000" data-promo="16000" data-vencimiento="2026-11-30" data-activa="true">
-
-  <img src="imagenes/napolitana.jpeg"
-       alt="Pizza de muzzarella"
-       class="foto-promocion">
-
-  <h3>Título de la promoción</h3>
-  <p>Descripción de la oferta especial.</p>
-
-  <p class="precio-anterior"></p>
-<p class="precio-promocional"></p>
-  <p class="descuento">
-  Ahorrás un 20 %
-</p>
-
-  <a class="whatsapp" href="https://wa.me/5493764194291?text=Hola,%20quiero%20pedir%20la%20promoci%C3%B3n%20de%20pizza%20Napolitana">
-    Pedir por WhatsApp
-</a>
-
-</div>
-
+    <!-- Las promociones se cargan desde Supabase -->
   </div>
 </section>
     <h2>Nuestras pizzas</h2>
@@ -673,47 +840,252 @@ header p:last-of-type {
   <footer>
     Matioli Pizzas Italianas · Posadas, Misiones
   </footer>
-<script>
-document.querySelectorAll(".tarjeta-promocion").forEach(function(tarjeta) {
-  const original = Number(tarjeta.dataset.original);
-  const promo = Number(tarjeta.dataset.promo);
-  const vencimiento = tarjeta.dataset.vencimiento;
-  const activa = tarjeta.dataset.activa !== "false";
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+const SUPABASE_URL = "https://vjoatnopubxoqsolaprd.supabase.co";
 
-  if (!activa) {
-    tarjeta.style.display = "none";
+const SUPABASE_KEY = "sb_publishable_6k8UzwSa4bmiei_YhZpUaA_NncYEMoJ";
+
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+</script>
+
+<script>
+async function cargarBannersDesdeSupabase() {
+  const seccion = document.getElementById("bannerPrincipal");
+  const marco = document.getElementById("bannerMarco");
+  const controles = document.getElementById("bannerControles");
+  const puntos = document.getElementById("bannerPuntos");
+  if (!seccion || !marco || !puntos) return;
+
+  const { data: banners, error } = await supabaseClient
+    .from("banners")
+    .select("id, nombre, nombre_archivo, orden, mostrar")
+    .eq("mostrar", true)
+    .order("orden", { ascending: true })
+    .order("id", { ascending: true });
+
+  if (error) {
+    console.error("No se pudieron cargar los banners:", error);
+    seccion.hidden = true;
     return;
   }
 
-  if (vencimiento) {
-    const hoy = new Date();
-    hoy.setHours(0, 0, 0, 0);
+  const visibles = (banners || []).filter(b => b.nombre_archivo);
+  if (visibles.length === 0) {
+    seccion.hidden = true;
+    return;
+  }
 
-    const fechaFin = new Date(vencimiento + "T00:00:00");
+  let indiceActual = 0;
+  let temporizador = null;
+  marco.replaceChildren();
+  puntos.replaceChildren();
 
-    if (hoy > fechaFin) {
-      tarjeta.style.display = "none";
-      return;
+  const imagen = document.createElement("img");
+  imagen.alt = visibles[0].nombre || "Banner de Matioli";
+  imagen.loading = "eager";
+  imagen.fetchPriority = "high";
+  marco.appendChild(imagen);
+
+  function mostrarBanner(indice) {
+    indiceActual = (indice + visibles.length) % visibles.length;
+    const banner = visibles[indiceActual];
+    const { data: urlData } = supabaseClient.storage
+      .from("imagenes-matioli")
+      .getPublicUrl(banner.nombre_archivo);
+    imagen.src = urlData.publicUrl;
+    imagen.alt = banner.nombre || "Banner de Matioli";
+    Array.from(puntos.children).forEach((punto, i) => {
+      punto.classList.toggle("activo", i === indiceActual);
+      punto.setAttribute("aria-current", i === indiceActual ? "true" : "false");
+    });
+  }
+
+  visibles.forEach((banner, indice) => {
+    const punto = document.createElement("button");
+    punto.type = "button";
+    punto.className = "banner-punto";
+    punto.setAttribute("aria-label", "Mostrar banner " + (indice + 1));
+    punto.addEventListener("click", () => {
+      mostrarBanner(indice);
+      reiniciarTemporizador();
+    });
+    puntos.appendChild(punto);
+  });
+
+  function reiniciarTemporizador() {
+    if (temporizador) clearInterval(temporizador);
+    if (visibles.length > 1) {
+      temporizador = setInterval(() => mostrarBanner(indiceActual + 1), 5000);
     }
   }
 
-  if (original > 0 && promo >= 0 && promo < original) {
-    const formato = new Intl.NumberFormat("es-AR");
+  document.getElementById("bannerAnterior").addEventListener("click", () => {
+    mostrarBanner(indiceActual - 1);
+    reiniciarTemporizador();
+  });
+  document.getElementById("bannerSiguiente").addEventListener("click", () => {
+    mostrarBanner(indiceActual + 1);
+    reiniciarTemporizador();
+  });
 
-    tarjeta.querySelector(".precio-anterior").textContent =
-      "Precio habitual: $ " + formato.format(original);
+  controles.hidden = visibles.length < 2;
+  puntos.hidden = visibles.length < 2;
+  seccion.hidden = false;
+  mostrarBanner(0);
+  reiniciarTemporizador();
+}
 
-    tarjeta.querySelector(".precio-promocional").textContent =
-      "Precio promocional: $ " + formato.format(promo);
+cargarBannersDesdeSupabase();
+</script>
+<script>
+async function cargarPromocionesDesdeSupabase() {
+  const seccion = document.querySelector(".promociones");
+  const lista = document.querySelector(".lista-promociones");
+  if (!seccion || !lista) return;
 
-    const descuento = Math.round((original - promo) / original * 100);
+  const { data: promociones, error } = await supabaseClient
+    .from("promociones")
+    .select("nombre, descripcion, precio, imagen, fecha_inicio, fecha_fin, activa")
+    .eq("activa", true);
 
-    const texto = tarjeta.querySelector(".descuento");
-    if (texto) {
-      texto.textContent = "Ahorrás un " + descuento + " %";
-    }
+  if (error) {
+    console.error("Error al cargar las promociones:", error);
+    lista.textContent = "No se pudieron cargar las promociones en este momento.";
+    return;
   }
-});
+
+  const ahora = new Date();
+  const hoy = [
+    ahora.getFullYear(),
+    String(ahora.getMonth() + 1).padStart(2, "0"),
+    String(ahora.getDate()).padStart(2, "0")
+  ].join("-");
+
+  const vigentes = (promociones || []).filter((promo) => {
+    if (promo.fecha_inicio && promo.fecha_inicio > hoy) return false;
+    if (promo.fecha_fin && promo.fecha_fin < hoy) return false;
+    return true;
+  });
+
+  lista.replaceChildren();
+
+  if (vigentes.length === 0) {
+    seccion.style.display = "none";
+    return;
+  }
+
+  const formato = new Intl.NumberFormat("es-AR");
+
+  vigentes.forEach((promo) => {
+    const tarjeta = document.createElement("article");
+    tarjeta.className = "tarjeta-promocion";
+
+    if (promo.imagen) {
+      const foto = document.createElement("img");
+      foto.className = "foto-promocion";
+      foto.src = promo.imagen;
+      foto.alt = promo.nombre ? "Promoción " + promo.nombre : "Imagen de promoción";
+      foto.loading = "lazy";
+      tarjeta.appendChild(foto);
+    }
+
+    const titulo = document.createElement("h3");
+    titulo.textContent = promo.nombre || "Promoción especial";
+    tarjeta.appendChild(titulo);
+
+    if (promo.descripcion) {
+      const descripcion = document.createElement("p");
+      descripcion.textContent = promo.descripcion;
+      tarjeta.appendChild(descripcion);
+    }
+
+    if (promo.precio !== null && promo.precio !== undefined && promo.precio !== "") {
+      const precio = document.createElement("p");
+      precio.className = "precio-promocional";
+      precio.textContent = "Precio: $ " + formato.format(Number(promo.precio));
+      tarjeta.appendChild(precio);
+    }
+
+    const pedido = document.createElement("a");
+    pedido.className = "whatsapp";
+    pedido.href = "https://wa.me/5493764194291?text=" +
+      encodeURIComponent("Hola, quiero consultar por la promoción: " + (promo.nombre || "Promoción especial"));
+    pedido.target = "_blank";
+    pedido.rel = "noopener noreferrer";
+    pedido.textContent = "Consultar por WhatsApp";
+    tarjeta.appendChild(pedido);
+
+    lista.appendChild(tarjeta);
+  });
+}
+
+cargarPromocionesDesdeSupabase();
+</script>
+<script>
+
+async function actualizarPizzasDesdeSupabase() {
+  const { data: productos, error } = await supabaseClient
+    .from("productos")
+    .select("*")
+    .eq("activo", true);
+
+  if (error) {
+    console.error("Error al cargar las pizzas:", error);
+    return;
+  }
+
+  const secciones = document.querySelectorAll(".pizzas");
+
+  secciones.forEach((seccion, indice) => {
+    const tipo = indice === 0 ? "tradicional" : "individual";
+
+    seccion.querySelectorAll(".pizza").forEach((tarjeta) => {
+      const nombreHTML = tarjeta.querySelector("h3").textContent.trim().toLowerCase();
+
+      const producto = productos.find((p) =>
+        p.tipo.trim().toLowerCase() === tipo &&
+        p.nombre.trim().toLowerCase() === nombreHTML
+      );
+
+      if (!producto) {
+        tarjeta.style.display = "none";
+        return;
+      }
+
+      tarjeta.style.display = "";
+
+      tarjeta.querySelector("p").textContent = producto.descripcion || "";
+
+      const precios = tarjeta.querySelectorAll(".precio strong");
+      const formato = new Intl.NumberFormat("es-AR");
+
+      precios[0].textContent =
+        "WhatsApp: $ " + formato.format(producto.precio_whatsapp);
+
+      precios[1].textContent =
+        "PedidosYa: $ " + formato.format(producto.precio_pedidosya);
+
+      const imagen = tarjeta.querySelector(".pizza-img");
+
+      if (imagen) {
+  if (producto.foto_url) {
+    imagen.src = producto.foto_url;
+    imagen.style.display = "block";
+  } else {
+    imagen.removeAttribute("src");
+    imagen.style.display = "none";
+  }
+}
+    });
+  });
+}
+
+
+actualizarPizzasDesdeSupabase();
 </script>
 </body>
 </html>
