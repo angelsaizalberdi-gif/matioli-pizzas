@@ -1,0 +1,646 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Productos - Matioli</title>
+<style>
+body {
+  margin: 0;
+  padding: 20px;
+  background: #f5f0e5;
+  color: #39432e;
+  font-family: Georgia, serif;
+}
+header {
+  background: #39432e;
+  color: white;
+  text-align: center;
+  padding: 22px;
+  border-bottom: 5px solid #b69a60;
+}
+main {
+  max-width: 1000px;
+  margin: 25px auto;
+}
+.grupo {
+  background: #fffdf8;
+  border: 1px solid #c6b58d;
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 22px;
+}
+.producto {
+  border-bottom: 1px solid #ded4bd;
+  padding: 15px 0;
+}
+.producto:last-child {
+  border-bottom: none;
+}
+label {
+  display: block;
+  margin-top: 10px;
+  font-weight: bold;
+}
+input, textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px;
+  border: 1px solid #c6b58d;
+  border-radius: 6px;
+  font-size: 15px;
+}
+textarea {
+  min-height: 55px;
+}
+button, .volver {
+  display: inline-block;
+  background: #39432e;
+  color: white;
+  border: none;
+  border-radius: 7px;
+  padding: 11px 16px;
+  margin-top: 12px;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 15px;
+}
+.estado {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+.estado input {
+  width: auto;
+}
+.estado label {
+  margin: 0;
+}
+.aviso {
+  background: #eee8da;
+  padding: 12px;
+  border-radius: 8px;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>MATIOLI</h1>
+  <p>Administración de productos y pizzas</p>
+</header>
+
+<main>
+  <div id="loginAdmin" style="max-width:350px; margin:20px auto; padding:20px; border:1px solid #ccc; border-radius:10px;">
+  <h2>Ingreso de administrador</h2>
+  <button type="button" onclick="transferirProductos()">Transferir las pizzas a Supabase</button>
+
+  <label>Correo electrónico</label>
+  <input id="emailAdmin" type="email" style="width:100%; padding:10px; margin:8px 0;">
+
+  <label>Contraseña</label>
+  <input id="passwordAdmin" type="password" style="width:100%; padding:10px; margin:8px 0;">
+
+  <button type="button" onclick="ingresarAdmin()">Ingresar</button>
+  <button type="button" onclick="cerrarSesion()" style="display:none;" id="botonCerrarSesion">
+  Cerrar sesión
+</button>
+  <p id="mensajeLogin"></p>
+</div>
+  <p class="aviso">
+    Los cambios de esta pantalla son provisionales.
+    Todavía no modifican el menú público.
+  </p>
+<section class="grupo" id="formNuevoProducto" style="display:none;">
+  <h2>➕ Agregar un producto nuevo</h2>
+
+  <label>Nombre de la pizza</label>
+  <input id="nuevoNombre" type="text" placeholder="Ej.: Especial Matioli">
+
+  <label>Tipo de pizza</label>
+  <select id="nuevoTipo">
+    <option value="Tradicional">Tradicional</option>
+    <option value="Individual">Individual</option>
+  </select>
+
+  <label>Precio por WhatsApp ($)</label>
+  <input id="nuevoWa" type="number" min="0" placeholder="Precio">
+
+  <label>Precio por PedidosYa ($)</label>
+  <input id="nuevoPy" type="number" min="0" placeholder="Precio">
+
+  <button onclick="agregarProducto()">Agregar pizza</button>
+</section>
+
+<button onclick="guardar()">Guardar todos los cambios</button>
+<p id="avisoCambios"></p>
+<div id="listado"></div>
+
+  <button onclick="guardar()">Guardar cambios</button>
+  <a href="admin.html" class="volver">Volver al panel</a>
+  <p id="mensaje"></p>
+</main>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const SUPABASE_URL = "https://vjoatnopubxoqsolaprd.supabase.co";
+
+const SUPABASE_KEY = "sb_publishable_6k8UzwSa4bmiei_YhZpUaA_NncYEMoJ";
+
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+const productosIniciales = [
+  {nombre:"Muzzarella", tipo:"Tradicional", wa:15000, py:18000, activo:true},
+  {nombre:"Calabresa", tipo:"Tradicional", wa:15500, py:18400, activo:true},
+  {nombre:"Jamón y morrones", tipo:"Tradicional", wa:15500, py:18400, activo:true},
+  {nombre:"Napolitana con jamón", tipo:"Tradicional", wa:19000, py:22800, activo:true},
+  {nombre:"Panceta y verdeo", tipo:"Tradicional", wa:19000, py:22800, activo:true},
+  {nombre:"Cuatro quesos", tipo:"Tradicional", wa:18500, py:22000, activo:true},
+  {nombre:"Queso azul y nueces", tipo:"Tradicional", wa:19500, py:23500, activo:true},
+  {nombre:"3 quesos", tipo:"Individual", wa:12000, py:14500, activo:true},
+  {nombre:"Muzzarella", tipo:"Individual", wa:7500, py:9100, activo:true},
+  {nombre:"Calabresa", tipo:"Individual", wa:11000, py:13000, activo:true},
+  {nombre:"Salsa pesto", tipo:"Individual", wa:9000, py:11000, activo:true},
+  {nombre:"Ajo y tomate", tipo:"Individual", wa:9000, py:11000, activo:true},
+  {nombre:"Margarita", tipo:"Individual", wa:9000, py:10500, activo:true}
+];
+
+let productos = productosIniciales.map(p => ({...p}));
+async function quitarFoto(indice) {
+  const producto = productos[indice];
+
+  if (!producto.id) {
+    alert("Primero iniciá sesión en el administrador.");
+    return;
+  }
+
+  const { error } = await supabaseClient
+    .from("productos")
+    .update({ foto_url: null })
+    .eq("id", producto.id);
+
+  if (error) {
+    alert("No se pudo quitar la fotografía: " + error.message);
+    return;
+  }
+
+  productos[indice].foto = "";
+  productos[indice].foto_url = null;
+
+  localStorage.setItem(
+    "productosMatioli",
+    JSON.stringify(productos)
+  );
+
+  const vista = document.getElementById("vistaFoto" + indice);
+  vista.src = "";
+  vista.style.display = "none";
+
+  const selector = document.getElementById("foto" + indice);
+  selector.value = "";
+
+  alert("¡Fotografía quitada correctamente!");
+}
+function cargar() {
+  const guardados = localStorage.getItem("productosMatioli");
+
+  if (guardados) {
+    try {
+      const datos = JSON.parse(guardados);
+
+      if (Array.isArray(datos)) {
+        productos = datos;
+      }
+
+    } catch (error) {
+      productos = productosIniciales.map(p => ({...p}));
+    }
+  }
+}
+
+let sesionActiva = false;
+
+async function ingresarAdmin() {
+  const email = document.getElementById("emailAdmin").value;
+  const password = document.getElementById("passwordAdmin").value;
+  const mensaje = document.getElementById("mensajeLogin");
+
+  const { data, error } = await supabaseClient.auth.signInWithPassword({
+    email: email,
+    password: password
+  });
+
+  if (error) {
+    mensaje.textContent = "Error: correo o contraseña incorrectos.";
+    return;
+  }
+
+  sesionActiva = true;
+  document.getElementById("botonCerrarSesion").style.display = "inline-block";
+  document.getElementById("formNuevoProducto").style.display = "block";
+
+  const { data: filas, error: errorProductos } = await supabaseClient
+    .from("productos")
+    .select("*")
+    .order("orden", { ascending: true });
+
+  if (errorProductos) {
+    mensaje.textContent = "Error al cargar productos: " + errorProductos.message;
+    return;
+  }
+
+  productos = filas.map(p => ({
+    id: p.id,
+    nombre: p.nombre,
+    tipo: p.tipo,
+    descripcion: p.descripcion || "",
+    wa: Number(p.precio_whatsapp) || 0,
+    py: Number(p.precio_pedidosya) || 0,
+    activo: p.activo,
+    foto: p.foto_url || ""
+  }));
+
+  localStorage.setItem("productosMatioli", JSON.stringify(productos));
+
+  mostrar();
+
+  mensaje.textContent = "Ingreso correcto. ¡Bienvenido!";
+}
+
+
+async function cerrarSesion() {
+
+  if (cambiosPendientes) {
+    alert("Tenés cambios sin guardar. Primero guardá los cambios y después cerrá sesión.");
+    return;
+  }
+
+  const { error } = await supabaseClient.auth.signOut();
+
+  if (error) {
+    alert("No se pudo cerrar la sesión: " + error.message);
+    return;
+  }
+
+  sesionActiva = false;
+
+  document.getElementById("formNuevoProducto").style.display = "none";
+  document.getElementById("botonCerrarSesion").style.display = "none";
+  document.getElementById("listado").innerHTML = "";
+
+  document.getElementById("mensajeLogin").textContent =
+    "Sesión cerrada correctamente.";
+
+  document.getElementById("emailAdmin").value = "";
+  document.getElementById("passwordAdmin").value = "";
+
+  document.getElementById("avisoCambios").textContent = "";
+}
+
+
+let cambiosPendientes = false;
+
+window.addEventListener("beforeunload", function (event) {
+  if (cambiosPendientes) {
+    event.preventDefault();
+    event.returnValue = "Tenés cambios sin guardar.";
+  }
+});
+
+function mostrar() {
+  if (!sesionActiva) {
+  document.getElementById("listado").innerHTML =
+    "Para modificar los productos, primero tenés que iniciar sesión.";
+  return;
+}
+    
+  const listado = document.getElementById("listado");
+  listado.innerHTML = "";
+
+  ["Tradicional", "Individual"].forEach(tipo => {
+    const grupo = document.createElement("section");
+    grupo.className = "grupo";
+
+    const titulo = document.createElement("h2");
+    titulo.textContent = tipo === "Tradicional"
+      ? "🍕 Pizzas tradicionales"
+      : "🍕 Pizzas individuales";
+    grupo.appendChild(titulo);
+    listado.appendChild(grupo);
+
+    productos.forEach((p, i) => {
+      if (p.tipo !== tipo) return;
+
+      const div = document.createElement("div");
+      div.className = "producto";
+      div.innerHTML = `
+        <h3>${p.nombre}</h3>
+        <label>Nombre</label>
+        <input id="nombre${i}">
+        <label>Descripción</label>
+        <textarea id="desc${i}"></textarea>
+        <label>Fotografía del producto</label>
+<input
+  id="foto${i}"
+  type="file"
+  accept="image/*"
+>
+<div>
+  <img
+    id="vistaFoto${i}"
+    src="${productos[i].foto || ''}"
+    alt="Foto del producto"
+    style="max-width:180px; display:${productos[i].foto ? 'block' : 'none'}; margin-top:10px; border-radius:8px;"
+  >
+  <button
+  type="button"
+  onclick="quitarFoto(${i})"
+>
+  Quitar fotografía
+</button>
+</div>
+        <label>Precio WhatsApp ($)</label>
+        <input id="wa${i}" type="number" min="0">
+        <label>Precio PedidosYa ($)</label>
+        <input id="py${i}" type="number" min="0">
+        <div class="estado">
+          <input id="activo${i}" type="checkbox">
+          <label for="activo${i}">Producto activo</label>
+          <button type="button" onclick="eliminarProducto(${i})">Eliminar producto</button>
+        </div>
+      `;
+
+      grupo.appendChild(div);
+      const marcarCambios = () => {
+  cambiosPendientes = true;
+
+  document.getElementById("avisoCambios").textContent =
+    "⚠️ Tenés cambios sin guardar. Recordá pulsar Guardar todos los cambios.";
+};
+
+div.addEventListener("input", marcarCambios);
+div.addEventListener("change", marcarCambios);
+
+      document.getElementById("nombre" + i).value = p.nombre;
+      document.getElementById("desc" + i).value = p.descripcion || "";
+      document.getElementById("wa" + i).value = p.wa;
+      document.getElementById("py" + i).value = p.py;
+      document.getElementById("activo" + i).checked = p.activo !== false;
+      const selectorFoto = document.getElementById("foto" + i);
+
+selectorFoto.addEventListener("change", async function() {
+  const archivo = this.files[0];
+
+  if (!archivo) return;
+
+  if (!archivo.type.startsWith("image/")) {
+    alert("Seleccioná un archivo de imagen.");
+    this.value = "";
+    return;
+  }
+
+  if (archivo.size > 1024 * 1024) {
+    alert("La imagen debe pesar menos de 1 MB.");
+    this.value = "";
+    return;
+  }
+
+  const extension = archivo.name.split(".").pop().toLowerCase();
+  const ruta = productos[i].id + "-" + Date.now() + "." + extension;
+
+  const { error: errorSubida } = await supabaseClient
+    .storage
+    .from("fotos-matioli")
+    .upload(ruta, archivo, {
+      upsert: true,
+      contentType: archivo.type
+    });
+
+  if (errorSubida) {
+    alert("No se pudo subir la fotografía: " + errorSubida.message);
+    return;
+  }
+
+  const { data: urlPublica } = supabaseClient
+    .storage
+    .from("fotos-matioli")
+    .getPublicUrl(ruta);
+
+  const fotoUrl = urlPublica.publicUrl + "?v=" + Date.now();
+  
+
+  const { error: errorActualizacion } = await supabaseClient
+    .from("productos")
+    .update({ foto_url: fotoUrl })
+    .eq("id", productos[i].id);
+
+  if (errorActualizacion) {
+    alert("La foto se subió, pero no se pudo guardar su URL: " + errorActualizacion.message);
+    return;
+  }
+
+  productos[i].foto = fotoUrl;
+  productos[i].foto_url = fotoUrl;
+
+  const vista = document.getElementById("vistaFoto" + i);
+  vista.src = fotoUrl;
+  vista.style.display = "block";
+
+  localStorage.setItem(
+    "productosMatioli",
+    JSON.stringify(productos)
+  );
+
+  alert("¡Fotografía subida y guardada en Supabase!");
+});
+    });
+
+    
+  })
+}
+
+async function guardar() {
+  const mensaje = document.getElementById("mensaje");
+
+  for (let i = 0; i < productos.length; i++) {
+    const p = productos[i];
+
+    p.nombre = document.getElementById("nombre" + i).value.trim();
+    p.descripcion = document.getElementById("desc" + i).value;
+    p.wa = Number(document.getElementById("wa" + i).value);
+    p.py = Number(document.getElementById("py" + i).value);
+    p.activo = document.getElementById("activo" + i).checked;
+
+    if (!p.id) {
+     mensaje.textContent = "Falta el identificador de: " + p.nombre;
+      return;
+    }
+
+    const { error } = await supabaseClient
+      .from("productos")
+      .update({
+        nombre: p.nombre,
+        descripcion: p.descripcion,
+        precio_whatsapp: p.wa,
+        precio_pedidosya: p.py,
+        activo: p.activo
+      })
+      .eq("id", p.id);
+
+    if (error) {
+      mensaje.textContent = "Error al guardar: " + error.message;
+      return;
+    }
+  }
+
+  localStorage.setItem("productosMatioli", JSON.stringify(productos));
+
+  cambiosPendientes = false;
+
+document.getElementById("avisoCambios").textContent =
+  "¡Cambios guardados correctamente!";
+
+mensaje.textContent = "¡Cambios guardados correctamente en Supabase!";
+}
+
+
+async function agregarProducto() {
+  const nombre = document.getElementById("nuevoNombre").value.trim();
+  const tipo = document.getElementById("nuevoTipo").value;
+  const wa = Number(document.getElementById("nuevoWa").value);
+  const py = Number(document.getElementById("nuevoPy").value);
+
+  if (!nombre || wa <= 0 || py <= 0) {
+    alert("Completá el nombre y los dos precios.");
+    return;
+  }
+
+  const nuevaPizza = {
+    nombre: nombre,
+    tipo: tipo,
+    descripcion: "",
+    precio_whatsapp: wa,
+    precio_pedidosya: py,
+    activo: true,
+    foto_url: null,
+    orden: productos.length
+  };
+
+  const { data: guardado, error } = await supabaseClient
+    .from("productos")
+    .insert([nuevaPizza])
+    .select()
+    .single();
+
+  if (error) {
+    alert("No se pudo guardar en Supabase: " + error.message);
+    return;
+  }
+
+  productos.push({
+    id: guardado.id,
+    nombre: guardado.nombre,
+    tipo: guardado.tipo,
+    wa: Number(guardado.precio_whatsapp),
+    py: Number(guardado.precio_pedidosya),
+    descripcion: guardado.descripcion || "",
+    activo: guardado.activo,
+    foto: guardado.foto_url || ""
+  });
+
+  localStorage.setItem("productosMatioli", JSON.stringify(productos));
+
+  document.getElementById("nuevoNombre").value = "";
+  document.getElementById("nuevoWa").value = "";
+  document.getElementById("nuevoPy").value = "";
+
+  mostrar();
+  alert("¡Producto guardado en Supabase!");
+}
+async function transferirProductos() {
+  const { data: sesion } = await supabaseClient.auth.getSession();
+
+  if (!sesion.session) {
+    alert("Primero tenés que ingresar como administrador.");
+    return;
+  }
+
+  const { data: existentes, error: errorConsulta } =
+    await supabaseClient.from("productos").select("id").limit(1);
+
+  if (errorConsulta) {
+    alert("No se pudo consultar Supabase: " + errorConsulta.message);
+    return;
+  }
+
+  if (existentes.length > 0) {
+    alert("La tabla ya tiene productos. No se realizó ninguna transferencia.");
+    return;
+  }
+
+  const filas = productos.map((p, i) => ({
+    nombre: p.nombre,
+    tipo: p.tipo,
+    descripcion: p.descripcion || "",
+    precio_whatsapp: Number(p.wa) || 0,
+    precio_pedidosya: Number(p.py) || 0,
+    activo: p.activo !== false,
+    foto_url: null,
+    orden: i
+  }));
+
+  const { error } = await supabaseClient.from("productos").insert(filas);
+
+  if (error) {
+    alert("Error al transferir: " + error.message);
+    return;
+  }
+
+  alert("¡Productos transferidos correctamente a Supabase!");
+}
+async function eliminarProducto(indice) {
+  const confirmar = confirm(
+    "¿Estás seguro de que querés eliminar este producto?"
+  );
+
+  if (!confirmar) return;
+
+  const producto = productos[indice];
+
+  if (!producto.id) {
+    alert("No se encontró el identificador del producto.");
+    return;
+  }
+
+  const { error } = await supabaseClient
+    .from("productos")
+    .delete()
+    .eq("id", producto.id);
+
+  if (error) {
+    alert("No se pudo eliminar: " + error.message);
+    return;
+  }
+
+  productos.splice(indice, 1);
+
+  localStorage.setItem(
+    "productosMatioli",
+    JSON.stringify(productos)
+  );
+
+  mostrar();
+
+  alert("Producto eliminado correctamente de Supabase.");
+}
+mostrar();
+</script>
+
+
+</body>
+</html>
