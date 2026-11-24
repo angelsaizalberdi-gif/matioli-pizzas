@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -1039,51 +1038,64 @@ async function actualizarPizzasDesdeSupabase() {
   }
 
   const secciones = document.querySelectorAll(".pizzas");
+  const formato = new Intl.NumberFormat("es-AR");
 
   secciones.forEach((seccion, indice) => {
     const tipo = indice === 0 ? "tradicional" : "individual";
 
-    seccion.querySelectorAll(".pizza").forEach((tarjeta) => {
-      const nombreHTML = tarjeta.querySelector("h3").textContent.trim().toLowerCase();
+    const productosTipo = productos.filter(producto =>
+      (producto.tipo || "").trim().toLowerCase() === tipo
+    );
 
-      const producto = productos.find((p) =>
-        p.tipo.trim().toLowerCase() === tipo &&
-        p.nombre.trim().toLowerCase() === nombreHTML
-      );
+    seccion.innerHTML = "";
 
-      if (!producto) {
-        tarjeta.style.display = "none";
-        return;
+    productosTipo.forEach(producto => {
+      const tarjeta = document.createElement("div");
+      tarjeta.className = "pizza";
+
+      if (producto.foto_url) {
+        const imagen = document.createElement("img");
+        imagen.src = producto.foto_url;
+        imagen.alt = "Pizza " + producto.nombre + " de Matioli";
+        imagen.className = "pizza-img";
+        tarjeta.appendChild(imagen);
       }
 
-      tarjeta.style.display = "";
+      const nombre = document.createElement("h3");
+      nombre.textContent = producto.nombre || "";
+      tarjeta.appendChild(nombre);
 
-      tarjeta.querySelector("p").textContent = producto.descripcion || "";
+      const descripcion = document.createElement("p");
+      descripcion.textContent = producto.descripcion || "";
+      tarjeta.appendChild(descripcion);
 
-      const precios = tarjeta.querySelectorAll(".precio strong");
-      const formato = new Intl.NumberFormat("es-AR");
+      const precios = document.createElement("div");
+      precios.className = "precio";
 
-      precios[0].textContent =
-        "WhatsApp: $ " + formato.format(producto.precio_whatsapp);
+      const precioWhatsApp = document.createElement("strong");
+      precioWhatsApp.textContent =
+        "WhatsApp: $ " + formato.format(Number(producto.precio_whatsapp) || 0);
+      precios.appendChild(precioWhatsApp);
 
-      precios[1].textContent =
-        "PedidosYa: $ " + formato.format(producto.precio_pedidosya);
+      const precioPedidosYa = document.createElement("strong");
+      precioPedidosYa.textContent =
+        "PedidosYa: $ " + formato.format(Number(producto.precio_pedidosya) || 0);
+      precios.appendChild(precioPedidosYa);
 
-      const imagen = tarjeta.querySelector(".pizza-img");
+      tarjeta.appendChild(precios);
 
-      if (imagen) {
-  if (producto.foto_url) {
-    imagen.src = producto.foto_url;
-    imagen.style.display = "block";
-  } else {
-    imagen.removeAttribute("src");
-    imagen.style.display = "none";
-  }
-}
+      const boton = document.createElement("a");
+      boton.className = "whatsapp";
+      boton.href =
+        "https://wa.me/5493764194291?text=" +
+        encodeURIComponent("Hola, quiero pedir una pizza " + producto.nombre);
+      boton.textContent = "Pedir por WhatsApp";
+      tarjeta.appendChild(boton);
+
+      seccion.appendChild(tarjeta);
     });
   });
 }
-
 
 actualizarPizzasDesdeSupabase();
 </script>
